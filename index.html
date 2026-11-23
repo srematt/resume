@@ -1062,6 +1062,29 @@
       .bullets b::after {
         content: " ]";
       }
+      .demo-wrap[hidden] {
+        display: none;
+      }
+      .demo-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 9px;
+        min-height: 28px;
+        padding: 3px 11px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        background: var(--surface);
+        color: var(--accent2-ink);
+        font-family: var(--mono);
+        font-size: 11.5px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .demo-btn:hover {
+        border-color: var(--accent2-ink);
+        background: var(--code-bg);
+      }
       .demo-wrap {
         margin-top: 10px;
         border: 1px solid var(--border);
@@ -1463,7 +1486,7 @@
 
       /* ---- Footer & Discreet Easter Egg ---- */
       .foot {
-        text-align: center;
+        text-align: left;
         padding-top: 2px;
       }
       .foot-trigger {
@@ -1657,6 +1680,7 @@
         .kbd-popover,
         .role-popup,
         .extra-toggle,
+        .demo-btn,
         .demo-wrap,
         .hero-img,
         .hero-fade,
@@ -2448,7 +2472,17 @@
                         visually explore platform data flows and system
                         architecture rather than relying on static text
                         runbooks.
-                        <div class="demo-wrap">
+                        <div>
+                          <button
+                            type="button"
+                            class="demo-btn"
+                            aria-expanded="false"
+                            aria-controls="duke-demo"
+                          >
+                            ▶ Want to see a demo?
+                          </button>
+                        </div>
+                        <div class="demo-wrap" id="duke-demo" hidden>
                           <div class="demo-bar"><span>▶ demos/diagrams-demo.mp4</span><span>anonymized walkthrough</span></div>
                           <video class="demo-vid" src="./assets/diagrams-demo.mp4" controls preload="metadata" playsinline muted loop aria-label="Interactive architectural documentation walkthrough video"></video>
                         </div>
@@ -3853,6 +3887,21 @@
               lbl.textContent = open
                 ? "Hide extra:"
                 : "+" + box.querySelectorAll("li").length + " more:";
+          });
+        });
+
+        document.querySelectorAll(".demo-btn").forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            var box = document.getElementById(btn.getAttribute("aria-controls"));
+            if (!box) return;
+            var open = box.hidden;
+            box.hidden = !open;
+            btn.setAttribute("aria-expanded", String(open));
+            btn.textContent = open ? "▾ Hide demo" : "▶ Want to see a demo?";
+            if (!open) {
+              var v = box.querySelector("video");
+              if (v && v.pause) v.pause();
+            }
           });
         });
 
